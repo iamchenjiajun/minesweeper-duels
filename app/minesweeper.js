@@ -392,4 +392,5 @@ setInterval(() => {
         opponentTurnTimeElapsed = Date.now() - opponentStartTime;
         document.getElementById("other-time").textContent = parseFloat(totalTime - (opponentTimeElapsed + opponentTurnTimeElapsed)/1000).toFixed(2);
     }
+    document.getElementById("myTime").style.width = ((totalTime - (totalTimeElapsed + turnTimeElapsed)/1000)/totalTime) * 100 +"%";
 }, 10);
