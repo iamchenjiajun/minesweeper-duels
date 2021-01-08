@@ -1,7 +1,7 @@
 // const { Socket } = require("socket.io");
 
 board_length = 16
-bomb_number = 20
+bomb_number = 40
 
 // struct to hold squares
 class Square {
@@ -75,7 +75,10 @@ function open_square(array2d, i, j) {
     if (array2d[i][j].neighbourCount == 0 && array2d[i][j].isMine == false) {
         for (let m=-1; m<=1; m++) {
             for (let n=-1; n<=1; n++) {
-                if ((array2d[i+m][j+n].isOpened == false) && (within_board_bounds(i+m, j+n)) ) {
+                if (!within_board_bounds(i+m, j+n)) {
+                    continue;
+                }
+                if (array2d[i+m][j+n].isOpened == false) {
                     open_square(array2d, i+m, j+n);
                     //render(array2d);
                 }
