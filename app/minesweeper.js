@@ -6,13 +6,18 @@ let myTurn = false;
 let array2d;
 let game_id;
 
-let game_state = 1;
+// 0 = ended
+// 1 = normal
+// 2 = not started
+let game_state = 2;
 
 let totalTime = 180;
 let startTime;
 let totalTimeElapsed = 0;
 let turnTimeElapsed = 0;
+let opponentStartTime = 0;
 let opponentTimeElapsed = 0;
+let opponentTurnTimeElapsed = 0;
 
 // struct to hold squares
 class Square {
@@ -254,6 +259,7 @@ function render(array2d, latest_i, latest_j) {
 
                 // timer
                 totalTimeElapsed += turnTimeElapsed;
+                opponentStartTime = Date.now();
 
                 open_square(array2d, i, j);
                 let info = {
@@ -321,6 +327,9 @@ function create_board() {
     // timer
     startTime = Date.now();
 
+    // game state
+    game_state = 1;
+
     return room_data;
 }
 
@@ -332,10 +341,16 @@ function join_room(board_data) {
 
     render(array2d);
     startTime = Date.now();
+
+    // game state
+    game_state = 1;
+
+    // timer
+    opponentStartTime = Date.now();
 }
 
 setInterval(() => {
-    if (game_state === 0) return;
+    if (game_state === 0 || game_state === 2) return;
     document.getElementById("other-time").textContent = parseFloat(totalTime - opponentTimeElapsed/1000).toFixed(2);
     if (myTurn) {
         turnTimeElapsed = Date.now() - startTime;
@@ -346,6 +361,7 @@ setInterval(() => {
             alert("you lost");
         }
     } else {
-
+        opponentTurnTimeElapsed = Date.now() - opponentStartTime;
+        document.getElementById("other-time").textContent = parseFloat(totalTime - (opponentTimeElapsed + opponentTurnTimeElapsed)/1000).toFixed(2);
     }
 }, 10);
