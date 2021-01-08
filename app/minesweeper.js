@@ -16,7 +16,7 @@ let game_id;
 let game_state = 2;
 
 let mineTimePenalty = 10000;
-let totalTime = 10;
+let totalTime = 150;
 let startTime;
 let totalTimeElapsed = 0;
 let turnTimeElapsed = 0;
