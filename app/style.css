@@ -1,0 +1,43 @@
+html {
+    background-color: black;
+    color: #fff8e7;
+}
+
+#lobby {
+    width: 50%;
+    height: 90%;
+    margin: auto;    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 10px dotted yellow;
+    padding: 10%;
+}
+
+#button-row {
+    height: 100%;
+    display: block;
+    justify-content: space-around;
+}
+
+.lobby-button {
+    display: inline-block;
+    background-color: #0e62ff;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+}
+
+.lobby-button:hover {
+    background-color: #0047cc;
+    cursor: pointer;
+}
+
+#room_id {
+    border-radius: 10px;
+    margin-top: 40px;
+    width: 100%;
+    height: 50px;
+    font-size: 50px;
+}

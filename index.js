@@ -9,11 +9,6 @@ let rooms = {}; // {"room_id":"number of people"}
 io.on('connection', (socket) => {
     console.log('a user connected');
 
-    socket.on('message', (message) =>     {
-        console.log(message);
-        io.emit('message', `${socket.id.substr(0,2)} said ${message}` );   
-    });
-
     socket.on('create_room', (message) => {
         // generate unique room number (spaghetti code)
         let room_number = '' + Math.floor(Math.random() * 10) + Math.floor(Math.random() * 10) + Math.floor(Math.random() * 10) + Math.floor(Math.random() * 10) + Math.floor(Math.random() * 10) + Math.floor(Math.random() * 10);
@@ -27,6 +22,9 @@ io.on('connection', (socket) => {
 
         // add to list of rooms
         rooms[room_number] = 1;
+
+        // log
+        console.log(`created room ${room_number}`);
     })
 
     socket.on('join_room', (message) => {
@@ -49,8 +47,8 @@ io.on('connection', (socket) => {
         io.to(room_number).emit('message', `you joined ${room_number}`)
         rooms[room_number] += 1;
 
-        // send message to all room members that someone joined
-        io.to(room_number).emit('message', "someone joined the room");
+        // start the game
+        io.to(room_number).emit('game_start', "someone joined the room and the game started");
     })
 });
 
