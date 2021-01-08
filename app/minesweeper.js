@@ -237,43 +237,6 @@ function render(array2d, latest_i, latest_j) {
                         button.style.color = "#808080";  //grey
                         break;
                 }
-                // switch(numNeighbours) {
-                //     case 0:
-                //         button.textContent = "";
-                //         break;
-                //     case 1:
-                //         button.textContent = "🍆";
-                //         button.style.color = "#0200FB"; //blue
-                //         break;
-                //     case 2:
-                //         button.textContent = "💦";
-                //         button.style.color = "#017F00"; //dark green
-                //         break;
-                //     case 3:
-                //         button.textContent = "🍑";
-                //         button.style.color = "#FA0300"; //brightish red
-                //         break;
-                //     case 4:
-                //         button.textContent = "🤪";
-                //         button.style.color = "#010082"; //dark blue
-                //         break;
-                //     case 5:
-                //         button.textContent = "❤";
-                //         button.style.color = "#820003"; //dark red
-                //         break;
-                //     case 6:
-                //         button.textContent = "🍣";
-                //         button.style.color = "#00807F"; //teal
-                //         break;
-                //     case 7:
-                //         button.textContent = "💋";
-                //         button.style.color = "#000000"; //black
-                //         break;
-                //     case 8:
-                //         button.textContent = "";
-                //         button.style.color = "#808080";  //grey
-                //         break;
-                // }
             }
 
             // highlight tile by opponent
@@ -286,6 +249,13 @@ function render(array2d, latest_i, latest_j) {
             button.onclick = () => {
                 if (!myTurn) return;
                 if (array2d[i][j].isOpened) return;
+
+                // game state
+                if (game_state === 2) {
+                    startTime = Date.now();
+                    turnTimeElapsed = Date.now() - startTime;
+                    game_state = 1;
+                }
 
                 // timer
                 totalTimeElapsed += turnTimeElapsed;
@@ -329,6 +299,7 @@ function render(array2d, latest_i, latest_j) {
 
 socket.on('receive_coord', (message) => {
     console.log('received packet');
+    game_state = 1;
 
     let info = JSON.parse(message);
     if (isCreator) {
@@ -381,9 +352,6 @@ function create_board() {
     // timer
     startTime = Date.now();
 
-    // game state
-    game_state = 1;
-
     return room_data;
 }
 
@@ -395,9 +363,6 @@ function join_room(board_data) {
 
     render(array2d);
     startTime = Date.now();
-
-    // game state
-    game_state = 1;
 
     // timer
     opponentStartTime = Date.now();
