@@ -153,7 +153,34 @@ function render(array2d) {
             } else if (array2d[i][j].isMine) {
                 button.textContent = 'X';
             } else {
-                button.textContent = array2d[i][j].neighbourCount;
+                numNeighbours = array2d[i][j].neighbourCount;
+                button.textContent = numNeighbours;
+                switch(numNeighbours) {
+                    case 1:
+                        button.style.color = "#0200FB"; //blue
+                        break;
+                    case 2:
+                        button.style.color = "#017F00"; //dark green
+                        break;
+                    case 3:
+                        button.style.color = "#FA0300"; //brightish red
+                        break;
+                    case 4:
+                        button.style.color = "#010082"; //dark blue
+                        break;
+                    case 5:
+                        button.style.color = "#820003"; //dark red
+                        break;
+                    case 6:
+                        button.style.color = "#00807F"; //teal
+                        break;
+                    case 7:
+                        button.style.color = "#000000"; //black
+                        break;
+                    case 8:
+                        button.style.color = "#808080";  //grey
+                        break;
+                }
             }
 
             // onclick
