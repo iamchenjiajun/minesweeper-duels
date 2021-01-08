@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Minesweeper</title>
     <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
     <script defer src="minesweeper.js"></script>
 </head>
@@ -14,16 +14,14 @@
     </ul>
 
     <div id="lobby">
-        <input placeholder="message">
-        <button>Send</button>
-
+        <input id="room_id" placeholder="room id">
         <button id="button_create_room">Create Room</button>
         <button id="button_join_room">Join Room</button>
     </div>
     
-    <div id="game" style="visibility:hidden">
+    <div id="game" style="display:none">
         <h1 id="game_room_number"></h1>
-        <p>this is the game</p>
+        <p id="text">this is the game</p>
     </div>
 </body>
 </html>
