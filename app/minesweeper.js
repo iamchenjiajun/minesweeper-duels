@@ -1,3 +1,7 @@
+// load audio tracks
+var audio_bomb = new Audio('/app/Minesweeper_bomb_sound.mp3')
+var audio_no_bomb = new Audio('/app/Minesweeper_no_bomb_sound.mp3')
+
 let board_length = 16;
 let bomb_number = 40;
 let safe_square = board_length*board_length - bomb_number;
@@ -117,6 +121,13 @@ function within_board_bounds(i, j) {
 }
 
 function open_square(array2d, i, j) {
+    // play sounds when clicked
+    if (array2d[i][j].isMine) {
+        audio_bomb.play();
+    } else if (!array2d[i][j].isOpened) {
+        audio_no_bomb.play();
+    }
+
     if (!array2d[i][j].isMine && !array2d[i][j].isOpened) {
         safe_square--;
     }
@@ -170,6 +181,7 @@ function render(array2d, latest_i, latest_j) {
                 }
             } else if (array2d[i][j].isMine) {
                 button.textContent = '💣';
+                
             } else {
                 numNeighbours = array2d[i][j].neighbourCount;
                 button.textContent = numNeighbours;
@@ -287,6 +299,7 @@ function render(array2d, latest_i, latest_j) {
 
 socket.on('receive_coord', (message) => {
     console.log('received packet');
+
     let info = JSON.parse(message);
     if (isCreator) {
         if (info['player'] === "2") { // check whether the packet is from the other player
