@@ -37,9 +37,7 @@ socket.on('game_start', message => {
 })
 
 socket.on('message', (message) => {
-    if (message == "room does not exist" || message === "room is full") {
-        document.getElementById("error_message").textContent = message;
-    }
+    document.getElementById("error_message").textContent = message;
 });
 
 document.getElementById('button_create_room').onclick = () => {
@@ -52,7 +50,7 @@ document.getElementById('button_join_room').onclick = () => {
 
     // check if number is valid
     if (room_number === "" || room_number.length != 6) {
-        alert("Please enter a valid room id");
+        document.getElementById("error_message").textContent = "Please enter a valid room id.";
     } else {
         socket.emit('join_room', room_number);
     }

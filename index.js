@@ -1,11 +1,10 @@
-// const http = require('http').createServer();
 const express = require('express');
 const socketIO = require('socket.io');
 const PORT = process.env.PORT || 8080;
 
 let rooms = {}; // {"room_id":"number of people"}
 
-//set up server
+// set up server
 const server = express()
     .use(express.static('./'))
     .use((req, res) => res.sendFile("./app/index.html", { root: __dirname }))
@@ -40,13 +39,13 @@ io.on('connection', (socket) => {
 
         // check if room exists (guard clause)
         if (rooms[room_number] === undefined) {
-            socket.emit('message', "room does not exist");
+            socket.emit('message', "Room does not exist.");
             return;
         }
 
         // check if room is at max capacity (guard clause)
         if (rooms[room_number] == 2) {
-            socket.emit('message', "room is full");
+            socket.emit('message', "Room is full.");
             return;
         }
 
@@ -75,5 +74,3 @@ io.on('connection', (socket) => {
         io.to(room_number).emit('receive_coord', message);
     })
 });
-
-// http.listen(process.env.PORT || 8080, () => console.log(`listening on ${process.env.PORT ? process.env.PORT : '8080'}`) );

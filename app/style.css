@@ -1,6 +1,14 @@
 html {
-    background-color: black;
+    background-color: #2f2f2f;
     color: #fff8e7;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#logo-title {
+    font-family: 'Yeon Sung', cursive;
+    font-size: 12rem;
+    text-align: center;
+    margin: 0;
 }
 
 #lobby {
@@ -11,8 +19,7 @@ html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 10px dotted yellow;
-    padding: 10%;
+    padding: 1% 5%;
 }
 
 #button-row {
@@ -23,23 +30,23 @@ html {
 
 .lobby-button {
     display: inline-block;
-    background-color: #0e62ff;
+    background-color: orange;
     padding: 10px;
     border: none;
     border-radius: 10px;
 }
 
 .lobby-button:hover {
-    background-color: #0047cc;
+    filter:brightness(90%);
     cursor: pointer;
 }
 
 #room_id {
     border-radius: 10px;
-    margin-top: 40px;
     width: 100%;
     height: 50px;
-    font-size: 50px;
+    font-size: 35px;
+    text-align: center;
 }
 
 .mine-button {

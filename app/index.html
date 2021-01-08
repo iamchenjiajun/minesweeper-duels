@@ -17,16 +17,18 @@
     <script defer src="/app/lobby.js"></script>
     <script defer src="/app/minesweeper.js"></script>
     <link rel="stylesheet" type="text/css" href="/app/style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Yeon+Sung&display=swap" rel="stylesheet"> 
 </head>
 <body>
     <div id="lobby">
-        <h1>graphic design is my passion</h1>
+        <h1 id="logo-title">Minesweeper<br>Duels</h1>
         <div id="button-row">
             <button id="button_create_room" class="lobby-button">Create Room</button>
             <button id="button_join_room" class="lobby-button">Join Room</button>
         </div>
         <h3 id="error_message" style="color: red;"></h3>
-        <input id="room_id" placeholder="room id">
+        <input id="room_id" placeholder="room id (eg. 130598)">
     </div>
     
     <div id="game" style="display:none">
