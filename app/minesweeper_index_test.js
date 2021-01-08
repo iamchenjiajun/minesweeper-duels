@@ -1,3 +1,5 @@
+// const { Socket } = require("socket.io");
+
 board_length = 16
 bomb_number = 40
 
@@ -70,7 +72,14 @@ function render(array2d) {
             // onclick
             button.onclick = () => {
                 array2d[i][j].isOpened = true;
+                info = {
+                    "player": socket.id,
+                    "x": i,
+                    "y": j,
+                }
                 render(array2d);
+                // send coords to server
+                socket.emit("coord", JSON.stringify(info));
             }
             row.appendChild(button);
         }

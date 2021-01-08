@@ -38,5 +38,3 @@ document.getElementById('button_join_room').onclick = () => {
         socket.emit('join_room', room_number);
     }
 }
-
-//send coordinates to server
