@@ -3,10 +3,6 @@ const express = require('express');
 const socketIO = require('socket.io');
 const PORT = process.env.PORT || 8080;
 
-// const io = require('socket.io')(http, {
-//     cors: { origin: "*" }
-// });
-
 let rooms = {}; // {"room_id":"number of people"}
 
 //set up server
