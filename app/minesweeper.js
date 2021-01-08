@@ -158,7 +158,7 @@ function render(array2d, latest_i, latest_j) {
                 button.textContent = "";
                 button.classList.add("mine-button-unopened");
             } else if (array2d[i][j].isMine) {
-                button.textContent = 'X';
+                button.textContent = '💣';
             } else {
                 numNeighbours = array2d[i][j].neighbourCount;
                 button.textContent = numNeighbours;
