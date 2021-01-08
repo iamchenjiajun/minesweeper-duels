@@ -15,6 +15,7 @@ let game_id;
 // 2 = not started
 let game_state = 2;
 
+let mineTimePenalty = 20000;
 let totalTime = 180;
 let startTime;
 let totalTimeElapsed = 0;
@@ -274,6 +275,13 @@ function render(array2d, latest_i, latest_j) {
                 opponentStartTime = Date.now();
 
                 open_square(array2d, i, j);
+
+                // check if click bomb
+                if (array2d[i][j].isMine) {
+                    totalTimeElapsed += mineTimePenalty;
+                }
+                
+                // send data
                 let info = {
                     "player": isCreator ? "1" : "2",
                     "action": "click",
@@ -362,19 +370,29 @@ function join_room(board_data) {
     opponentStartTime = Date.now();
 }
 
+function loseGame() {
+    socket.emit("lose");
+    game_state = 0;
+    alert("you lost");
+}
+
 setInterval(() => {
     if (game_state === 0 || game_state === 2) return;
-    document.getElementById("other-time").textContent = parseFloat(totalTime - opponentTimeElapsed/1000).toFixed(2);
     if (myTurn) {
+        // update opponent time (simple)
+        document.getElementById("other-time").textContent = parseFloat(totalTime - opponentTimeElapsed/1000).toFixed(2);
+
+        // update self time
         turnTimeElapsed = Date.now() - startTime;
         document.getElementById("self-time").textContent = parseFloat(totalTime - (totalTimeElapsed + turnTimeElapsed)/1000).toFixed(2);
-        if (totalTime - (totalTimeElapsed + turnTimeElapsed)/1000 <= 0) {
-            socket.emit("lose");
-            game_state = 0;
-            alert("you lost");
-        }
+        if (totalTime - (totalTimeElapsed + turnTimeElapsed)/1000 <= 0) loseGame();
     } else {
+        // update opponent time
         opponentTurnTimeElapsed = Date.now() - opponentStartTime;
         document.getElementById("other-time").textContent = parseFloat(totalTime - (opponentTimeElapsed + opponentTurnTimeElapsed)/1000).toFixed(2);
+
+        // update self time (simple)
+        document.getElementById("self-time").textContent = parseFloat(totalTime - (totalTimeElapsed)/1000).toFixed(2);
+        if (totalTime - totalTimeElapsed/1000 <= 0) loseGame();
     }
 }, 10);
