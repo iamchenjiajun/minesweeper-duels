@@ -4,19 +4,25 @@ html {
 }
 
 #lobby {
-    margin: auto;
     width: 50%;
-    border: #fff8e7;
+    height: 90%;
+    margin: auto;    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 10px dotted yellow;
+    padding: 10%;
 }
 
 #button-row {
     height: 100%;
-    display: flex;
+    display: block;
     justify-content: space-around;
 }
 
 .lobby-button {
-    display: block;
+    display: inline-block;
     background-color: #0e62ff;
     padding: 10px;
     border: none;
