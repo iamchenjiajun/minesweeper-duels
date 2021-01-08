@@ -155,7 +155,7 @@ function open_square(array2d, i, j) {
 
 function check_win() {
     if (safe_square < 1) {
-        if (totalTimeElapsed > opponentTotalTimeElapsed) {
+        if (totalTimeElapsed > opponentTimeElapsed) {
             loseGame();
         }
     }
