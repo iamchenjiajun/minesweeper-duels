@@ -155,7 +155,9 @@ function open_square(array2d, i, j) {
 
 function check_win() {
     if (safe_square < 1) {
-        alert("hello");
+        if (totalTimeElapsed > opponentTurnTimeElapsed) {
+            loseGame();
+        }
     }
 }
 
@@ -309,7 +311,6 @@ function render(array2d, latest_i, latest_j) {
 
                 // send coords to server
                 socket.emit("coord", JSON.stringify(info));
-                check_win();
 
                 myTurn = false;
                 render_turn();
@@ -346,6 +347,7 @@ socket.on('receive_coord', (message) => {
         }
     }
     render(array2d, info['x'], info['y']);
+    check_win();
 })
 
 socket.on('game_end', message => {
