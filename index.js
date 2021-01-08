@@ -73,4 +73,10 @@ io.on('connection', (socket) => {
         // send it to the other player
         io.to(room_number).emit('receive_coord', message);
     })
+
+    socket.on("game_end", (message) => {
+        let data = JSON.parse(message);
+        let room_number = data['room_number'];
+        io.to(room_number).emit('game_end', message);
+    })
 });

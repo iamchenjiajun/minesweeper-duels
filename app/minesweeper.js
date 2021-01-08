@@ -15,7 +15,7 @@ let game_id;
 // 2 = not started
 let game_state = 2;
 
-let mineTimePenalty = 20000;
+let mineTimePenalty = 20000 * 7;
 let totalTime = 180;
 let startTime;
 let totalTimeElapsed = 0;
@@ -333,6 +333,22 @@ socket.on('receive_coord', (message) => {
     render(array2d, info['x'], info['y']);
 })
 
+socket.on('game_end', message => {
+    let info = JSON.parse(message);
+    let winner = info['winner'];
+    game_state = 0;
+    if (isCreator && winner === "1") {
+        document.getElementById("self-time").textContent = "WIN";
+        document.getElementById("other-time").textContent = "LOSE";
+    } else if (!isCreator && winner === "2") {
+        document.getElementById("self-time").textContent = "WIN";
+        document.getElementById("other-time").textContent = "LOSE";
+    } else {
+        document.getElementById("self-time").textContent = "LOSE";
+        document.getElementById("other-time").textContent = "WIN";
+    }
+})
+
 // for player 1
 function create_board() {
     // create board
@@ -371,9 +387,11 @@ function join_room(board_data) {
 }
 
 function loseGame() {
-    socket.emit("lose");
-    game_state = 0;
-    alert("you lost");
+    let info = {
+        "winner": (isCreator) ? "2" : "1",
+        "room_number": game_id,
+    }
+    socket.emit("game_end", JSON.stringify(info));
 }
 
 setInterval(() => {
