@@ -41,3 +41,16 @@ html {
     height: 50px;
     font-size: 50px;
 }
+
+.mine-button {
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.mine-button-row {
+    display: flex;
+    margin: 0px;
+    padding: 0px;
+}
