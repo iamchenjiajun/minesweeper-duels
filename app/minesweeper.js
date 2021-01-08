@@ -16,7 +16,7 @@ let game_id;
 let game_state = 2;
 
 let mineTimePenalty = 10000;
-let totalTime = 180;
+let totalTime = 10;
 let startTime;
 let totalTimeElapsed = 0;
 let turnTimeElapsed = 0;
@@ -247,6 +247,7 @@ function render(array2d, latest_i, latest_j) {
 
             // onclick
             button.onclick = () => {
+                if (game_state === 0) return;
                 if (!myTurn) return;
                 if (array2d[i][j].isOpened) return;
 
@@ -381,18 +382,23 @@ setInterval(() => {
     if (myTurn) {
         // update opponent time (simple)
         document.getElementById("other-time").textContent = parseFloat(totalTime - opponentTimeElapsed/1000).toFixed(2);
+        document.getElementById("otherTime").style.height = ((totalTime - (opponentTimeElapsed)/1000)/totalTime) * 100 + "%";
 
         // update self time
         turnTimeElapsed = Date.now() - startTime;
         document.getElementById("self-time").textContent = parseFloat(totalTime - (totalTimeElapsed + turnTimeElapsed)/1000).toFixed(2);
+        document.getElementById("myTime").style.height = ((totalTime - (totalTimeElapsed + turnTimeElapsed)/1000)/totalTime) * 100 + "%";
+
         if (totalTime - (totalTimeElapsed + turnTimeElapsed)/1000 <= 0) loseGame();
     } else {
         // update opponent time
         opponentTurnTimeElapsed = Date.now() - opponentStartTime;
         document.getElementById("other-time").textContent = parseFloat(totalTime - (opponentTimeElapsed + opponentTurnTimeElapsed)/1000).toFixed(2);
+        document.getElementById("otherTime").style.height = ((totalTime - (opponentTimeElapsed + opponentTurnTimeElapsed)/1000)/totalTime) * 100 + "%";
 
         // update self time (simple)
         document.getElementById("self-time").textContent = parseFloat(totalTime - (totalTimeElapsed)/1000).toFixed(2);
+        document.getElementById("myTime").style.height = ((totalTime - (totalTimeElapsed)/1000)/totalTime) * 100 + "%";
         if (totalTime - totalTimeElapsed/1000 <= 0) loseGame();
     }
 }, 10);

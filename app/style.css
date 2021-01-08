@@ -82,3 +82,37 @@ html {
 .timer {
     font-size: 72px;
 }
+
+#myMaxTime {
+    position: relative;
+    width: 20px;
+    height: 500px;
+    /* height: 100%; */
+    background-color: grey;
+}
+
+#myTime {   
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 20px;
+    height: 100%;
+    background-color: green;
+}
+
+#otherMaxTime {
+    position: relative;
+    width: 20px;
+    height: 500px;
+    /* height: 100%; */
+    background-color: grey;
+}
+
+#otherTime {   
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 20px;
+    height: 100%;
+    background-color: red;
+}
