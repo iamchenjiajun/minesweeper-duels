@@ -165,6 +165,21 @@ function render_turn() {
     turn_elem.style.color = (myTurn) ? "green" : "red";
 }
 
+function generate_emojis_list() {
+    emoji = [];
+    emoji_list = ['🍆', '💦', '🍑', '🤪', '❤', '🍣', '💋', '👖', '👕', '🏈', '🎁', '👑'];
+    used_numbers = [];
+    for (let i = 0; i < 8; i++) {
+        position = Math.floor(Math.random() * emoji_list.length);
+        while (used_numbers.includes(position)) {
+            position = Math.floor(Math.random() * emoji_list.length);
+        }
+        used_numbers.push(position);
+        emoji.push(emoji_list[position]);
+    }
+    return emoji;
+}
+
 function render(array2d, latest_i, latest_j) {
     render_turn();
     //creating the 16x16 buttons
