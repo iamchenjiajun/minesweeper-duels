@@ -278,7 +278,7 @@ function render(array2d, latest_i, latest_j) {
 
             // highlight tile by opponent
             if (i == latest_i && j == latest_j) {
-                button.style.borderColor = "blue";
+                button.style.borderColor = "red";
                 button.style.borderStyle = "dashed";
             }
 
