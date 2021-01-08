@@ -1,7 +1,8 @@
 // const { Socket } = require("socket.io");
 
-board_length = 16
-bomb_number = 40
+board_length = 16;
+bomb_number = 40;
+safe_square = board_length*board_length - bomb_number;
 
 // struct to hold squares
 class Square {
@@ -69,9 +70,11 @@ function within_board_bounds(i, j) {
 }
 
 function open_square(array2d, i, j) {
-    console.log(i, j);
+    if (!array2d[i][j].isMine && !array2d[i][j].isOpened) {
+        safe_square--;
+    }
     array2d[i][j].isOpened = true;
-    console.log(array2d[i][j].neighbourCount);
+    console.log(safe_square);
     if (array2d[i][j].neighbourCount == 0 && array2d[i][j].isMine == false) {
         for (let m=-1; m<=1; m++) {
             for (let n=-1; n<=1; n++) {
@@ -80,10 +83,15 @@ function open_square(array2d, i, j) {
                 }
                 if (array2d[i+m][j+n].isOpened == false) {
                     open_square(array2d, i+m, j+n);
-                    //render(array2d);
                 }
             }
         }
+    }
+}
+
+function check_win() {
+    if (safe_square < 1) {
+        alert("hello");
     }
 }
 
@@ -119,6 +127,7 @@ function render(array2d) {
                 render(array2d);
                 // send coords to server
                 socket.emit("coord", JSON.stringify(info));
+                check_win();
             }
             row.appendChild(button);
         }
