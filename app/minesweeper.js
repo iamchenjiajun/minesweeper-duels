@@ -8,6 +8,17 @@ socket.on('message', text => {
 
 });
 
+socket.on('create_room_success', room_number => {
+    // show the game
+    document.getElementById("game").style.visibility = "visible";
+
+    // hide the lobby
+    document.getElementById("lobby").style.visibility = "hidden";
+
+    // show the room number
+    document.getElementById("game_room_number").textContent = room_number;
+})
+
 document.querySelector('button').onclick = () => {
 
     const text = document.querySelector('input').value;

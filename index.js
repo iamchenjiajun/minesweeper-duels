@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
 
         // add socket to room
         socket.join(room_number);
-        io.to(room_number).emit('message', `you created room number: ${room_number}`);
+        io.to(room_number).emit('create_room_success', room_number);
 
         // add to list of rooms
         rooms[room_number] = 1;
