@@ -1,3 +1,7 @@
+// load audio tracks
+var audio_bomb = new Audio('/app/Minesweeper_bomb_sound.mp3')
+var audio_no_bomb = new Audio('/app/Minesweeper_no_bomb_sound.mp3')
+
 let board_length = 16;
 let bomb_number = 40;
 let safe_square = board_length*board_length - bomb_number;
@@ -6,13 +10,18 @@ let myTurn = false;
 let array2d;
 let game_id;
 
-let game_state = 1;
+// 0 = ended
+// 1 = normal
+// 2 = not started
+let game_state = 2;
 
 let totalTime = 180;
 let startTime;
 let totalTimeElapsed = 0;
 let turnTimeElapsed = 0;
+let opponentStartTime = 0;
 let opponentTimeElapsed = 0;
+let opponentTurnTimeElapsed = 0;
 
 // struct to hold squares
 class Square {
@@ -117,6 +126,13 @@ function within_board_bounds(i, j) {
 }
 
 function open_square(array2d, i, j) {
+    // play sounds when clicked
+    if (array2d[i][j].isMine) {
+        audio_bomb.play();
+    } else if (!array2d[i][j].isOpened) {
+        audio_no_bomb.play();
+    }
+
     if (!array2d[i][j].isMine && !array2d[i][j].isOpened) {
         safe_square--;
     }
@@ -185,6 +201,7 @@ function render(array2d, latest_i, latest_j) {
                 }
             } else if (array2d[i][j].isMine) {
                 button.textContent = '💣';
+                
             } else {
                 numNeighbours = array2d[i][j].neighbourCount;
                 button.textContent = numNeighbours;
@@ -269,6 +286,7 @@ function render(array2d, latest_i, latest_j) {
 
                 // timer
                 totalTimeElapsed += turnTimeElapsed;
+                opponentStartTime = Date.now();
 
                 open_square(array2d, i, j);
                 let info = {
@@ -302,6 +320,7 @@ function render(array2d, latest_i, latest_j) {
 
 socket.on('receive_coord', (message) => {
     console.log('received packet');
+
     let info = JSON.parse(message);
     if (isCreator) {
         if (info['player'] === "2") { // check whether the packet is from the other player
@@ -336,6 +355,9 @@ function create_board() {
     // timer
     startTime = Date.now();
 
+    // game state
+    game_state = 1;
+
     return room_data;
 }
 
@@ -347,10 +369,16 @@ function join_room(board_data) {
 
     render(array2d);
     startTime = Date.now();
+
+    // game state
+    game_state = 1;
+
+    // timer
+    opponentStartTime = Date.now();
 }
 
 setInterval(() => {
-    if (game_state === 0) return;
+    if (game_state === 0 || game_state === 2) return;
     document.getElementById("other-time").textContent = parseFloat(totalTime - opponentTimeElapsed/1000).toFixed(2);
     if (myTurn) {
         turnTimeElapsed = Date.now() - startTime;
@@ -361,6 +389,7 @@ setInterval(() => {
             alert("you lost");
         }
     } else {
-
+        opponentTurnTimeElapsed = Date.now() - opponentStartTime;
+        document.getElementById("other-time").textContent = parseFloat(totalTime - (opponentTimeElapsed + opponentTurnTimeElapsed)/1000).toFixed(2);
     }
 }, 10);
