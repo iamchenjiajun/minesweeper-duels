@@ -6,7 +6,7 @@ function hide_lobby(room_number) {
     // hide the lobby
     document.getElementById("lobby").style.display = "none";
     // show the room number
-    document.getElementById("game_room_number").textContent = room_number;
+    document.getElementById("game_room_number").textContent = `Room ID: ${room_number}`;
 }
 
 socket.on('create_room_success', (room_number) => {
