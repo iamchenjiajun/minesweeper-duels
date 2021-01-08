@@ -50,6 +50,10 @@ html {
     font-weight: bold;
 }
 
+.mine-button-unopened {
+    background-color: gray;
+}
+
 .mine-button-row {
     display: flex;
     margin: 0px;

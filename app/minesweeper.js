@@ -156,12 +156,16 @@ function render(array2d, latest_i, latest_j) {
             // show button as html element
             if (!array2d[i][j].isOpened) {
                 button.textContent = "";
+                button.classList.add("mine-button-unopened");
             } else if (array2d[i][j].isMine) {
                 button.textContent = 'X';
             } else {
                 numNeighbours = array2d[i][j].neighbourCount;
                 button.textContent = numNeighbours;
                 switch(numNeighbours) {
+                    case 0:
+                        button.textContent = "";
+                        break;
                     case 1:
                         button.style.color = "#0200FB"; //blue
                         break;
