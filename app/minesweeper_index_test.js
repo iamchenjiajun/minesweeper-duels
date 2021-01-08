@@ -1,3 +1,5 @@
+// const { Socket } = require("socket.io");
+
 board_length = 16
 bomb_number = 40
 
@@ -88,13 +90,15 @@ function render(array2d) {
     x.textContent = "";
     for (let i = 0; i < board_length; i++) {
         let row = document.createElement("div");
+        row.classList.add("mine-button-row");
         x.appendChild(row);
         for (let j = 0; j < board_length; j++) {
             let button = document.createElement('BUTTON');
+            button.classList.add("mine-button");
 
             // show button as html element
             if (!array2d[i][j].isOpened) {
-                button.textContent = "U";
+                button.textContent = "";
             } else if (array2d[i][j].isMine) {
                 button.textContent = 'X';
             } else {
@@ -103,9 +107,15 @@ function render(array2d) {
 
             // onclick
             button.onclick = () => {
-                //array2d[i][j].isOpened = true;
-                open_square(array2d, i, j);
+                array2d[i][j].isOpened = true;
+                info = {
+                    "player": socket.id,
+                    "x": i,
+                    "y": j,
+                }
                 render(array2d);
+                // send coords to server
+                socket.emit("coord", JSON.stringify(info));
             }
             row.appendChild(button);
         }

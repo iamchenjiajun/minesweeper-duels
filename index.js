@@ -12,7 +12,7 @@ let rooms = {}; // {"room_id":"number of people"}
 //set up server
 const server = express()
     .use(express.static('./'))
-    .use((req, res) => res.sendFile("./app/index.html", { root: __dirname }))
+    .use((req, res) => res.sendFile("./app/minesweeper_index.html", { root: __dirname }))
     .use(express.static(__dirname + '/static'))
     .listen(PORT, () => console.log(`listening on ${PORT}`))
 
@@ -61,6 +61,15 @@ io.on('connection', (socket) => {
 
         // start the game
         io.to(room_number).emit('game_start', "someone joined the room and the game started");
+    })
+
+    socket.on("coord", (message) => {
+        let data = JSON.parse(message);
+        console.log(data);
+        console.log(socket.rooms)
+
+        // send it to the other player
+        
     })
 });
 
