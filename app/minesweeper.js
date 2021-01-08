@@ -140,7 +140,7 @@ function render_turn() {
     turn_elem.style.color = (myTurn) ? "green" : "red";
 }
 
-function render(array2d) {
+function render(array2d, latest_i, latest_j) {
     render_turn();
     //creating the 16x16 buttons
     let x = document.getElementById("board");
@@ -189,6 +189,12 @@ function render(array2d) {
                 }
             }
 
+            // highlight tile by opponent
+            if (i == latest_i && j == latest_j) {
+                button.style.borderColor = "blue";
+                button.style.borderStyle = "dashed";
+            }
+
             // onclick
             button.onclick = () => {
                 if (!myTurn) return;
@@ -229,7 +235,7 @@ socket.on('receive_coord', (message) => {
             open_square(array2d, info['x'], info['y']);
         }
     }
-    render(array2d);
+    render(array2d, info['x'], info['y']);
 })
 
 // for player 1
