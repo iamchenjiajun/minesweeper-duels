@@ -15,6 +15,7 @@ let game_id;
 // 2 = not started
 let game_state = 2;
 
+let mineTimePenalty = 10000;
 let totalTime = 180;
 let startTime;
 let totalTimeElapsed = 0;
@@ -154,7 +155,9 @@ function open_square(array2d, i, j) {
 
 function check_win() {
     if (safe_square < 1) {
-        alert("hello");
+        if (totalTimeElapsed > opponentTurnTimeElapsed) {
+            loseGame();
+        }
     }
 }
 
@@ -234,61 +237,39 @@ function render(array2d, latest_i, latest_j) {
                         button.style.color = "#808080";  //grey
                         break;
                 }
-                // switch(numNeighbours) {
-                //     case 0:
-                //         button.textContent = "";
-                //         break;
-                //     case 1:
-                //         button.textContent = "🍆";
-                //         button.style.color = "#0200FB"; //blue
-                //         break;
-                //     case 2:
-                //         button.textContent = "💦";
-                //         button.style.color = "#017F00"; //dark green
-                //         break;
-                //     case 3:
-                //         button.textContent = "🍑";
-                //         button.style.color = "#FA0300"; //brightish red
-                //         break;
-                //     case 4:
-                //         button.textContent = "🤪";
-                //         button.style.color = "#010082"; //dark blue
-                //         break;
-                //     case 5:
-                //         button.textContent = "❤";
-                //         button.style.color = "#820003"; //dark red
-                //         break;
-                //     case 6:
-                //         button.textContent = "🍣";
-                //         button.style.color = "#00807F"; //teal
-                //         break;
-                //     case 7:
-                //         button.textContent = "💋";
-                //         button.style.color = "#000000"; //black
-                //         break;
-                //     case 8:
-                //         button.textContent = "";
-                //         button.style.color = "#808080";  //grey
-                //         break;
-                // }
             }
 
             // highlight tile by opponent
             if (i == latest_i && j == latest_j) {
-                button.style.borderColor = "blue";
+                button.style.borderColor = "red";
                 button.style.borderStyle = "dashed";
             }
 
             // onclick
             button.onclick = () => {
+                if (game_state === 0) return;
                 if (!myTurn) return;
                 if (array2d[i][j].isOpened) return;
+
+                // game state
+                if (game_state === 2) {
+                    startTime = Date.now();
+                    turnTimeElapsed = Date.now() - startTime;
+                    game_state = 1;
+                }
 
                 // timer
                 totalTimeElapsed += turnTimeElapsed;
                 opponentStartTime = Date.now();
 
                 open_square(array2d, i, j);
+
+                // check if click bomb
+                if (array2d[i][j].isMine) {
+                    totalTimeElapsed += mineTimePenalty;
+                }
+                
+                // send data
                 let info = {
                     "player": isCreator ? "1" : "2",
                     "action": "click",
@@ -301,7 +282,6 @@ function render(array2d, latest_i, latest_j) {
 
                 // send coords to server
                 socket.emit("coord", JSON.stringify(info));
-                check_win();
 
                 myTurn = false;
                 render_turn();
@@ -320,6 +300,7 @@ function render(array2d, latest_i, latest_j) {
 
 socket.on('receive_coord', (message) => {
     console.log('received packet');
+    game_state = 1;
 
     let info = JSON.parse(message);
     if (isCreator) {
@@ -338,6 +319,23 @@ socket.on('receive_coord', (message) => {
         }
     }
     render(array2d, info['x'], info['y']);
+    check_win();
+})
+
+socket.on('game_end', message => {
+    let info = JSON.parse(message);
+    let winner = info['winner'];
+    game_state = 0;
+    if (isCreator && winner === "1") {
+        document.getElementById("self-time").textContent = "WIN";
+        document.getElementById("other-time").textContent = "LOSE";
+    } else if (!isCreator && winner === "2") {
+        document.getElementById("self-time").textContent = "WIN";
+        document.getElementById("other-time").textContent = "LOSE";
+    } else {
+        document.getElementById("self-time").textContent = "LOSE";
+        document.getElementById("other-time").textContent = "WIN";
+    }
 })
 
 // for player 1
@@ -355,9 +353,6 @@ function create_board() {
     // timer
     startTime = Date.now();
 
-    // game state
-    game_state = 1;
-
     return room_data;
 }
 
@@ -370,27 +365,36 @@ function join_room(board_data) {
     render(array2d);
     startTime = Date.now();
 
-    // game state
-    game_state = 1;
-
     // timer
     opponentStartTime = Date.now();
 }
 
+function loseGame() {
+    let info = {
+        "winner": (isCreator) ? "2" : "1",
+        "room_number": game_id,
+    }
+    socket.emit("game_end", JSON.stringify(info));
+}
+
 setInterval(() => {
     if (game_state === 0 || game_state === 2) return;
-    document.getElementById("other-time").textContent = parseFloat(totalTime - opponentTimeElapsed/1000).toFixed(2);
     if (myTurn) {
+        // update opponent time (simple)
+        document.getElementById("other-time").textContent = parseFloat(totalTime - opponentTimeElapsed/1000).toFixed(2);
+
+        // update self time
         turnTimeElapsed = Date.now() - startTime;
         document.getElementById("self-time").textContent = parseFloat(totalTime - (totalTimeElapsed + turnTimeElapsed)/1000).toFixed(2);
-        if (totalTime - (totalTimeElapsed + turnTimeElapsed)/1000 <= 0) {
-            socket.emit("lose");
-            game_state = 0;
-            alert("you lost");
-        }
+        if (totalTime - (totalTimeElapsed + turnTimeElapsed)/1000 <= 0) loseGame();
     } else {
+        // update opponent time
         opponentTurnTimeElapsed = Date.now() - opponentStartTime;
         document.getElementById("other-time").textContent = parseFloat(totalTime - (opponentTimeElapsed + opponentTurnTimeElapsed)/1000).toFixed(2);
+
+        // update self time (simple)
+        document.getElementById("self-time").textContent = parseFloat(totalTime - (totalTimeElapsed)/1000).toFixed(2);
+        if (totalTime - totalTimeElapsed/1000 <= 0) loseGame();
     }
     document.getElementById("myTime").style.width = ((totalTime - (totalTimeElapsed + turnTimeElapsed)/1000)/totalTime) * 100 +"%";
 }, 10);
