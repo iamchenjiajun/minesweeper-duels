@@ -25,8 +25,19 @@ function populate_array2d(array2d, rows, cols) {
     for (let i=0; i < rows; i++) {
         for (let j=0; j < cols; j++) {
             array2d[i][j] = new Square();
-            array2d[i][j].isMine = (Math.random() > 0.5) ? true: false; // 50% chance to be a mine
+            //removed %50 chance to be bomb
+            //array2d[i][j].isMine = (Math.random() > 0.5) ? true: false; // 50% chance to be a mine
         }
+    }
+    //randomly pick 40 squares to be bombs
+    for (let i=0; i < bomb_number; i++) {
+        rand_row = Math.floor(Math.random() * board_length);
+        rand_col = Math.floor(Math.random() * board_length);
+        while (array2d[rand_row][rand_col].isMine) {   //if Square is already a Mine, reroll
+            rand_row = Math.floor(Math.random() * board_length);
+            rand_col = Math.floor(Math.random() * board_length);
+        }
+        array2d[rand_row][rand_col].isMine = true;
     }
 
     for (let i=0; i < rows; i++) {
@@ -46,6 +57,29 @@ function get_neighbour_count(array2d, row, col, rows, cols) {
         }
     }
     return count;
+}
+function within_board_bounds(i, j) {
+    if ((i < board_length) && (i > -1) && (j < board_length) && (j > -1)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function open_square(array2d, i, j) {
+    console.log(i, j);
+    array2d[i][j].isOpened = true;
+    console.log(array2d[i][j].neighbourCount);
+    if (array2d[i][j].neighbourCount == 0 && array2d[i][j].isMine == false) {
+        for (let m=-1; m<=1; m++) {
+            for (let n=-1; n<=1; n++) {
+                if ((array2d[i+m][j+n].isOpened == false) && (within_board_bounds(i+m, j+n)) ) {
+                    open_square(array2d, i+m, j+n);
+                    //render(array2d);
+                }
+            }
+        }
+    }
 }
 
 function render(array2d) {
@@ -69,7 +103,8 @@ function render(array2d) {
 
             // onclick
             button.onclick = () => {
-                array2d[i][j].isOpened = true;
+                //array2d[i][j].isOpened = true;
+                open_square(array2d, i, j);
                 render(array2d);
             }
             row.appendChild(button);
