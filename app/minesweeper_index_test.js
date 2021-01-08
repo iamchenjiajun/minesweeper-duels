@@ -4,6 +4,7 @@ bomb_number = 40
 // struct to hold squares
 class Square {
     constructor() {
+        this.isOpened = false;
         this.isMine = false;
         this.isFlagged = false;
         this.neighbourCount = 0;
@@ -49,16 +50,27 @@ function get_neighbour_count(array2d, row, col, rows, cols) {
 
 function render(array2d) {
     //creating the 16x16 buttons
-    var x = document.getElementById("game");
-    for (i = 0; i < board_length; i++) {
-        var row = document.createElement("div");
+    let x = document.getElementById("board");
+    x.textContent = "";
+    for (let i = 0; i < board_length; i++) {
+        let row = document.createElement("div");
         x.appendChild(row);
-        for (j = 0; j < board_length; j++) {
-            var button = document.createElement('BUTTON');
-            if (array2d[i][j].isMine) {
+        for (let j = 0; j < board_length; j++) {
+            let button = document.createElement('BUTTON');
+
+            // show button as html element
+            if (!array2d[i][j].isOpened) {
+                button.textContent = "U";
+            } else if (array2d[i][j].isMine) {
                 button.textContent = 'X';
             } else {
                 button.textContent = array2d[i][j].neighbourCount;
+            }
+
+            // onclick
+            button.onclick = () => {
+                array2d[i][j].isOpened = true;
+                render(array2d);
             }
             row.appendChild(button);
         }
