@@ -157,6 +157,9 @@ function render(array2d, latest_i, latest_j) {
             if (!array2d[i][j].isOpened) {
                 button.textContent = "";
                 button.classList.add("mine-button-unopened");
+                if (array2d[i][j].isFlagged) {
+                    button.textContent = "⛳";
+                }
             } else if (array2d[i][j].isMine) {
                 button.textContent = '💣';
             } else {
@@ -202,6 +205,7 @@ function render(array2d, latest_i, latest_j) {
             // onclick
             button.onclick = () => {
                 if (!myTurn) return;
+                if (array2d[i][j].isOpened) return;
 
                 open_square(array2d, i, j);
                 let info = {
@@ -219,6 +223,13 @@ function render(array2d, latest_i, latest_j) {
 
                 myTurn = false;
                 render_turn();
+            }
+
+            // right click
+            button.oncontextmenu = (event) => {
+                event.preventDefault();
+                array2d[i][j].isFlagged ^= true;
+                render(array2d, latest_i, latest_j);
             }
             row.appendChild(button);
         }
