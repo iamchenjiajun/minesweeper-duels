@@ -24,11 +24,12 @@ socket.on('join_room_success', (room_number) => {
 });
 
 socket.on('game_start', message => {
+    let room_data = JSON.parse(message);
+    let board_data = room_data['board_data'];
+    game_id = room_data['room_number'];
     if (isCreator) {
         myTurn = true;
     } else {
-        let room_data = JSON.parse(message);
-        let board_data = room_data['board_data'];
         join_room(board_data);
         myTurn = false; // uncomment this later
     }

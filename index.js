@@ -67,11 +67,12 @@ io.on('connection', (socket) => {
 
     socket.on("coord", (message) => {
         let data = JSON.parse(message);
+        let room_number = data['room_number'];
+        console.log(`room_number:${room_number}`);
         console.log(data);
-        console.log(socket.rooms)
 
         // send it to the other player
-        
+        io.to(room_number).emit('receive_coord', message);
     })
 });
 

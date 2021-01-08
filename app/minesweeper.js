@@ -1,11 +1,10 @@
-// const { Socket } = require("socket.io");
-
-board_length = 16;
-bomb_number = 40;
-safe_square = board_length*board_length - bomb_number;
+let board_length = 16;
+let bomb_number = 40;
+let safe_square = board_length*board_length - bomb_number;
 
 let myTurn = true;
 let array2d;
+let game_id;
 
 // struct to hold squares
 class Square {
@@ -158,11 +157,13 @@ function render(array2d) {
 
             // onclick
             button.onclick = () => {
-                //if (!myTurn) return;
+                if (!myTurn) return;
 
                 open_square(array2d, i, j);
-                info = {
-                    "player": socket.id,
+                let info = {
+                    "player": isCreator ? "1" : "2",
+                    "action": "click",
+                    "room_number": game_id,
                     "x": i,
                     "y": j,
                 }
@@ -171,11 +172,30 @@ function render(array2d) {
                 // send coords to server
                 socket.emit("coord", JSON.stringify(info));
                 check_win();
+
+                myTurn = false;
             }
             row.appendChild(button);
         }
     }
 }
+
+socket.on('receive_coord', (message) => {
+    console.log('received packet');
+    let info = JSON.parse(message);
+    if (isCreator) {
+        if (info['player'] === "2") { // check whether the packet is from the other player
+            myTurn = true;
+            open_square(array2d, info['x'], info['y']);
+        }
+    } else {
+        if (info['player'] === "1") { // check whether the packet is from the other player
+            myTurn = true;
+            open_square(array2d, info['x'], info['y']);
+        }
+    }
+    render(array2d);
+})
 
 // for player 1
 function create_board() {
