@@ -1,5 +1,6 @@
 // const http = require('http').createServer();
 const express = require('express');
+const socketIO = require('socket.io');
 const PORT = process.env.PORT || 8080;
 
 // const io = require('socket.io')(http, {
@@ -13,7 +14,7 @@ const server = express()
     .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
     .listen(PORT, () => console.log(`listening on ${PORT}`))
 
-const io = socketID(server);
+const io = socketIO(server);
 
 io.on('connection', (socket) => {
     console.log('a user connected');
