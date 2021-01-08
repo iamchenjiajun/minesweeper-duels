@@ -54,13 +54,15 @@ function render(array2d) {
     x.textContent = "";
     for (let i = 0; i < board_length; i++) {
         let row = document.createElement("div");
+        row.classList.add("mine-button-row");
         x.appendChild(row);
         for (let j = 0; j < board_length; j++) {
             let button = document.createElement('BUTTON');
+            button.classList.add("mine-button");
 
             // show button as html element
             if (!array2d[i][j].isOpened) {
-                button.textContent = "U";
+                button.textContent = "";
             } else if (array2d[i][j].isMine) {
                 button.textContent = 'X';
             } else {
