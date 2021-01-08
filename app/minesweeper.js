@@ -1,28 +1,27 @@
 let isCreator = false;
 
-function enter_game_room(room_number) {
+function hide_lobby(room_number) {
     // show the game
     document.getElementById("game").style.display = "block";
-
     // hide the lobby
     document.getElementById("lobby").style.display = "none";
-
     // show the room number
     document.getElementById("game_room_number").textContent = room_number;
 }
 
-function join_room_success(room_number) {
+socket.on('create_room_success', (room_number) => {
+        hide_lobby(room_number);
+});
+
+socket.on('join_room_success', (room_number) => {
     if (!isCreator) {
-        enter_game_room(room_number); // set everything up for player 2
+        hide_lobby(room_number); // set everything up for player 2
     } else {
         let room_data = create_board();
         room_data['room_number'] = room_number; // send room number together with packet to player 2
         socket.emit("room_data", JSON.stringify(room_data));
     }
-}
-
-socket.on('create_room_success', enter_game_room);
-socket.on('join_room_success', join_room_success);
+});
 
 socket.on('game_start', message => {
     if (isCreator) {
