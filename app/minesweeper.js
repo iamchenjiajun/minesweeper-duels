@@ -14,3 +14,12 @@ document.querySelector('button').onclick = () => {
     socket.emit('message', text)
     
 }
+
+document.getElementById('button_create_room').onclick = () => {
+    socket.emit('create_room', '');
+}
+
+document.getElementById('button_join_room').onclick = () => {
+    const room_number = document.querySelector('input').value;
+    socket.emit('join_room', room_number);
+}
