@@ -33,6 +33,7 @@ socket.on('game_start', message => {
         join_room(board_data);
         myTurn = false; // uncomment this later
     }
+    render_turn();
 })
 
 socket.on('message', (message) => {

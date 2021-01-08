@@ -2,7 +2,7 @@ let board_length = 16;
 let bomb_number = 40;
 let safe_square = board_length*board_length - bomb_number;
 
-let myTurn = true;
+let myTurn = false;
 let array2d;
 let game_id;
 
@@ -134,7 +134,14 @@ function check_win() {
     }
 }
 
+function render_turn() {
+    let turn_elem = document.getElementById("turn");
+    turn_elem.textContent = (myTurn) ? "Your turn!" : "Waiting for opponent...";
+    turn_elem.style.color = (myTurn) ? "green" : "red";
+}
+
 function render(array2d) {
+    render_turn();
     //creating the 16x16 buttons
     let x = document.getElementById("board");
     x.textContent = "";
@@ -174,6 +181,7 @@ function render(array2d) {
                 check_win();
 
                 myTurn = false;
+                render_turn();
             }
             row.appendChild(button);
         }
