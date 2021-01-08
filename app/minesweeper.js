@@ -1,4 +1,4 @@
-const socket = io('ws://localhost:8080');
+// const socket = io('ws://localhost:8080');
 
 function enter_game_room(room_number) {
     // show the game

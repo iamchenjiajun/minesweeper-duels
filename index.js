@@ -1,10 +1,22 @@
-const http = require('http').createServer();
+// const http = require('http').createServer();
+const express = require('express');
+const socketIO = require('socket.io');
+const PORT = process.env.PORT || 8080;
 
-const io = require('socket.io')(http, {
-    cors: { origin: "*" }
-});
+// const io = require('socket.io')(http, {
+//     cors: { origin: "*" }
+// });
 
 let rooms = {}; // {"room_id":"number of people"}
+
+//set up server
+const server = express()
+    .use(express.static('./'))
+    .use((req, res) => res.sendFile("./app/index.html", { root: __dirname }))
+    .use(express.static(__dirname + '/static'))
+    .listen(PORT, () => console.log(`listening on ${PORT}`))
+
+const io = socketIO(server);
 
 io.on('connection', (socket) => {
     console.log('a user connected');
@@ -52,4 +64,4 @@ io.on('connection', (socket) => {
     })
 });
 
-http.listen(8080, () => console.log('listening on http://localhost:8080') );
+// http.listen(process.env.PORT || 8080, () => console.log(`listening on ${process.env.PORT ? process.env.PORT : '8080'}`) );
