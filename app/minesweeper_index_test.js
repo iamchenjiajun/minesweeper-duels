@@ -1,7 +1,7 @@
 // const { Socket } = require("socket.io");
 
 board_length = 16
-bomb_number = 40
+bomb_number = 20
 
 // struct to hold squares
 class Square {
@@ -107,7 +107,7 @@ function render(array2d) {
 
             // onclick
             button.onclick = () => {
-                array2d[i][j].isOpened = true;
+                open_square(array2d, i, j);
                 info = {
                     "player": socket.id,
                     "x": i,
