@@ -4,6 +4,9 @@ board_length = 16;
 bomb_number = 40;
 safe_square = board_length*board_length - bomb_number;
 
+let myTurn = true;
+let array2d;
+
 // struct to hold squares
 class Square {
     constructor() {
@@ -28,8 +31,6 @@ function populate_array2d(array2d, rows, cols) {
     for (let i=0; i < rows; i++) {
         for (let j=0; j < cols; j++) {
             array2d[i][j] = new Square();
-            //removed %50 chance to be bomb
-            //array2d[i][j].isMine = (Math.random() > 0.5) ? true: false; // 50% chance to be a mine
         }
     }
     //randomly pick 40 squares to be bombs
@@ -48,6 +49,45 @@ function populate_array2d(array2d, rows, cols) {
             array2d[i][j].neighbourCount = get_neighbour_count(array2d, i, j, rows, cols);
         }
     }
+}
+
+function populate_array2d_from_board_data(array2d, board_data, rows, cols) {
+    if (board_data.length != rows * cols) alert ('corrupt message');
+
+    // populate with squares
+    for (let i=0; i < rows; i++) {
+        for (let j=0; j < cols; j++) {
+            array2d[i][j] = new Square();
+        }
+    }
+
+    let count = 0;
+
+    // populate mines from board data
+    for (let i=0; i<rows; i++) {
+        for (let j=0; j<cols; j++) {
+            array2d[i][j].isMine = (board_data[count] == '1') ? true : false;
+            count++;
+        }
+    }
+
+    // populate neighbour count
+    for (let i=0; i < rows; i++) {
+        for (let j=0; j< cols; j++) {
+            array2d[i][j].neighbourCount = get_neighbour_count(array2d, i, j, rows, cols);
+        }
+    }
+}
+
+function get_array2d_string(array2d, rows, cols) {
+    let mineString = '';
+    for (let i=0; i<rows; i++) {
+        for (let j=0; j<cols; j++) {
+            if (array2d[i][j].isMine) mineString += '1';
+            else mineString += '0';
+        }
+    }
+    return mineString;
 }
 
 function get_neighbour_count(array2d, row, col, rows, cols) {
@@ -118,6 +158,8 @@ function render(array2d) {
 
             // onclick
             button.onclick = () => {
+                if (!myTurn) return;
+                
                 open_square(array2d, i, j);
                 info = {
                     "player": socket.id,
@@ -125,6 +167,7 @@ function render(array2d) {
                     "y": j,
                 }
                 render(array2d);
+
                 // send coords to server
                 socket.emit("coord", JSON.stringify(info));
                 check_win();
@@ -134,6 +177,26 @@ function render(array2d) {
     }
 }
 
-let array2d = create_array2d(board_length, board_length);
-populate_array2d(array2d, board_length, board_length);
-render(array2d);
+// for player 1
+function create_board() {
+    // create board
+    array2d = create_array2d(board_length, board_length);
+    populate_array2d(array2d, board_length, board_length);
+
+    // get board data and send to player 2
+    let room_data = {};
+    room_data['board_data'] = get_array2d_string(array2d, board_length, board_length);
+
+    render(array2d);
+
+    return room_data;
+}
+
+// for player 2
+function join_room(board_data) {
+    console.log(`received ${board_data} from player 1`);
+    array2d = create_array2d(board_length, board_length);
+    populate_array2d_from_board_data(array2d, board_data, board_length, board_length);
+
+    render(array2d);
+}

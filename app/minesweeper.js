@@ -1,4 +1,4 @@
-// const socket = io('ws://localhost:8080');
+let isCreator = false;
 
 function enter_game_room(room_number) {
     // show the game
@@ -9,13 +9,30 @@ function enter_game_room(room_number) {
 
     // show the room number
     document.getElementById("game_room_number").textContent = room_number;
-} 
+}
+
+function join_room_success(room_number) {
+    if (!isCreator) {
+        enter_game_room(room_number); // set everything up for player 2
+    } else {
+        let room_data = create_board();
+        room_data['room_number'] = room_number; // send room number together with packet to player 2
+        socket.emit("room_data", JSON.stringify(room_data));
+    }
+}
 
 socket.on('create_room_success', enter_game_room);
-socket.on('game_start', enter_game_room);
+socket.on('join_room_success', join_room_success);
 
 socket.on('game_start', message => {
-    document.getElementById("text").textContent = "game started as someone joined the room";
+    if (isCreator) {
+        myTurn = true;
+    } else {
+        let room_data = JSON.parse(message);
+        let board_data = room_data['board_data'];
+        join_room(board_data);
+        // myTurn = false; // uncomment this later
+    }
 })
 
 socket.on('message', (message) => {
@@ -26,10 +43,11 @@ socket.on('message', (message) => {
 
 document.getElementById('button_create_room').onclick = () => {
     socket.emit('create_room', '');
+    isCreator = true;
 }
 
 document.getElementById('button_join_room').onclick = () => {
-    const room_number = document.getElementById("room_id").value;
+    let room_number = document.getElementById("room_id").value;
 
     // check if number is valid
     if (room_number === "" || room_number.length != 6) {

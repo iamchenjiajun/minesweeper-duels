@@ -56,12 +56,18 @@ io.on('connection', (socket) => {
 
         // join the room
         socket.join(room_number);
-        io.to(room_number).emit('message', `you joined ${room_number}`)
         rooms[room_number] += 1;
 
         // start the game
-        io.to(room_number).emit('game_start', "someone joined the room and the game started");
+        io.to(room_number).emit('join_room_success', room_number);
     })
+
+    socket.on("room_data", message => {
+        let room_data = JSON.parse(message);
+        let room_number = room_data['room_number'];
+        console.log(`${room_number} is starting...`);
+        io.to(room_number).emit('game_start', message);
+    });
 
     socket.on("coord", (message) => {
         let data = JSON.parse(message);
