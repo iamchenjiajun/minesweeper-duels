@@ -78,3 +78,7 @@ html {
     margin: 0px;
     padding: 0px;
 }
+
+.timer {
+    font-size: 72px;
+}
