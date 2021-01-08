@@ -15,7 +15,7 @@ let game_id;
 // 2 = not started
 let game_state = 2;
 
-let mineTimePenalty = 20000 * 7;
+let mineTimePenalty = 10000;
 let totalTime = 180;
 let startTime;
 let totalTimeElapsed = 0;
