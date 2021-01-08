@@ -6,6 +6,7 @@
     <title>Minesweeper</title>
     <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
     <script defer src="minesweeper.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 
@@ -14,9 +15,11 @@
     </ul>
 
     <div id="lobby">
+        <div id="button-row">
+            <button id="button_create_room" class="lobby-button">Create Room</button>
+            <button id="button_join_room" class="lobby-button">Join Room</button>
+        </div>
         <input id="room_id" placeholder="room id">
-        <button id="button_create_room">Create Room</button>
-        <button id="button_join_room">Join Room</button>
     </div>
     
     <div id="game" style="display:none">
