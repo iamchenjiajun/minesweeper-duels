@@ -247,6 +247,7 @@ function render(array2d, latest_i, latest_j) {
 
             // onclick
             button.onclick = () => {
+                if (game_state === 0) return;
                 if (!myTurn) return;
                 if (array2d[i][j].isOpened) return;
 
