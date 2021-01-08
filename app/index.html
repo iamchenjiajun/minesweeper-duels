@@ -4,8 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minesweeper</title>
-    <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
-    <script defer src="minesweeper.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io();
+        let el;
+  
+        socket.on('time', (timeString) => {
+          el = document.getElementById('server-time');
+          el.innerHTML = 'Server time: ' + timeString;
+        });
+    </script>
 </head>
 <body>
 
@@ -24,4 +32,5 @@
         <p id="text">this is the game</p>
     </div>
 </body>
+<script defer src="/app/minesweeper.js"></script>
 </html>
