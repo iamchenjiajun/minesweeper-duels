@@ -14,17 +14,17 @@
           el.innerHTML = 'Server time: ' + timeString;
         });
     </script>
+    <script defer src="/app/minesweeper.js"></script>
+    <link rel="stylesheet" type="text/css" href="/app/style.css">
 </head>
 <body>
-
-    <ul>
-        
-    </ul>
-
     <div id="lobby">
+        <h1>graphic design is my passion</h1>
+        <div id="button-row">
+            <button id="button_create_room" class="lobby-button">Create Room</button>
+            <button id="button_join_room" class="lobby-button">Join Room</button>
+        </div>
         <input id="room_id" placeholder="room id">
-        <button id="button_create_room">Create Room</button>
-        <button id="button_join_room">Join Room</button>
     </div>
     
     <div id="game" style="display:none">
