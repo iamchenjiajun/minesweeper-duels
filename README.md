@@ -33,7 +33,7 @@ The turn timer was really **tricky to implement**. This is because we had to tak
 
 Make a working version of the Minesweeper program and adding our own spin to it.
 
-Making a real time multiplayer browser game.
+Making a **real time** multiplayer browser game.
 
 ## What we learned
 
