@@ -1,6 +1,7 @@
 // load audio tracks
 var audio_bomb = new Audio('/app/Minesweeper_bomb_sound.mp3')
 var audio_no_bomb = new Audio('/app/Minesweeper_no_bomb_sound.mp3')
+let audio_game_start = new Audio('/app/game_start.mp3')
 
 let board_length = 16;
 let bomb_number = 40;
@@ -353,6 +354,9 @@ function create_board() {
     // timer
     startTime = Date.now();
 
+    // start sound
+    audio_game_start.play();
+
     return room_data;
 }
 
@@ -367,6 +371,9 @@ function join_room(board_data) {
 
     // timer
     opponentStartTime = Date.now();
+
+    // start sound
+    audio_game_start.play();
 }
 
 function loseGame() {
